@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBEE - 登入</title>
+    <link rel="stylesheet" href="styles/globals.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 登入頁面 -->
+        <div id="login-page" class="page active">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h1 class="auth-logo">NBEE</h1>
+                        <p class="auth-subtitle">使用你的公司 Email 登入</p>
+                    </div>
+
+                    <form id="login-form" class="auth-form">
+                        <!-- 第一步：輸入 Email -->
+                        <div id="step-1" class="form-step active">
+                            <div class="form-group">
+                                <label for="email" class="form-label">電子郵件</label>
+                                <input type="email" id="email" class="form-input" placeholder="you@heiso.com" required>
+                            </div>
+                            <button type="button" id="next-btn" class="btn btn-primary btn-full">
+                                下一步
+                            </button>
+                        </div>
+
+                        <!-- 第二步：選擇登入方式 -->
+                        <div id="step-2-options" class="form-step">
+                            <div class="user-info">
+                                <span id="user-email-display-options"></span>
+                            </div>
+                            <div class="login-options">
+                                <h3>選擇登入方式</h3>
+                                <button type="button" id="choose-password" class="btn btn-primary btn-full">
+                                    🔑 使用密碼登入
+                                </button>
+                                <button type="button" id="choose-otp" class="btn btn-primary btn-full">
+                                    📧 使用 OTP 驗證碼
+                                </button>
+                                <button type="button" id="choose-both" class="btn btn-primary btn-full">
+                                    🔐 密碼 + OTP 雙重驗證
+                                </button>
+                            </div>
+                            <button type="button" id="back-btn-options" class="btn btn-ghost">
+                                返回
+                            </button>
+                        </div>
+                        <!-- 第二步：密碼登入 -->
+                        <div id="step-2-password" class="form-step">
+                            <div class="user-info">
+                                <span id="user-email-display-password"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="form-label">密碼</label>
+                                <input type="password" id="password" class="form-input" placeholder="請輸入您的密碼" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">
+                                登入
+                            </button>
+                            <button type="button" id="back-btn-password" class="btn btn-ghost">
+                                返回
+                            </button>
+                        </div>
+
+                        <!-- 第二步：OTP 登入 -->
+                        <div id="step-2-otp" class="form-step">
+                            <div class="user-info">
+                                <span id="user-email-display-otp"></span>
+                            </div>
+                            <div class="otp-info">
+                                <p>我們已發送 6 位數驗證碼到您的信箱</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="otp-code" class="form-label">驗證碼</label>
+                                <input type="text" id="otp-code" class="form-input" placeholder="請輸入 6 位數驗證碼" maxlength="6" required>
+                            </div>
+                            <button type="button" id="verify-otp-btn" class="btn btn-primary btn-full">
+                                驗證並登入
+                            </button>
+                            <button type="button" id="resend-otp-btn" class="btn btn-ghost">
+                                重新發送驗證碼
+                            </button>
+                            <button type="button" id="back-btn-otp" class="btn btn-ghost">
+                                返回
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="auth-footer">
+                        <!-- 移除開發者測試帳號提示 -->
+                    </div>
+                </div>
+
+                <footer class="auth-page-footer">
+                    <div class="footer-links">
+                        <span>© 2024 NBEE. All rights reserved.</span>
+                        <a href="#" class="footer-link">隱私政策</a>
+                        <a href="#" class="footer-link">服務條款</a>
+                        <a href="#" class="footer-link">安全性</a>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- 移除原有的 dev-hint 相關樣式 -->
+    <style>
+        .login-options {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .login-options h3 {
+            margin-bottom: 1.5rem;
+            color: var(--color-text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        
+        .login-options .btn {
+            margin-bottom: 0.75rem;
+        }
+        
+        .otp-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid var(--color-primary);
+        }
+        
+        .otp-info p {
+            margin: 0;
+            color: var(--color-text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        #otp-code {
+            text-align: center;
+            font-size: 1.25rem;
+            letter-spacing: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+
+        /* 測試帳號彈窗樣式 */
+        .test-accounts-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .test-accounts-modal.active {
+            display: flex;
+        }
+
+        .test-accounts-modal .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .test-accounts-modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .test-accounts-modal .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .test-accounts-modal .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .test-accounts-modal .modal-close:hover {
+            color: #333;
+        }
+
+        .test-accounts-modal .modal-body {
+            padding: 1.5rem;
+        }
+
+        .test-account {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid hsl(var(--primary));
+        }
+
+        .test-account:last-child {
+            margin-bottom: 0;
+        }
+
+        .test-account h4 {
+            margin: 0 0 0.75rem 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .test-account p {
+            margin: 0.25rem 0;
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .test-account strong {
+            color: #333;
+        }
+    </style>
+
+    <!-- 右下角問號 logo -->
+    <div class="help-logo" id="help-logo">
+        <span class="help-icon">?</span>
+    </div>
+
+    <!-- 測試帳號信息彈窗 -->
+    <div class="test-accounts-modal" id="test-accounts-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🧪 開發者測試帳號</h3>
+                <button class="modal-close" id="close-test-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="test-account">
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('owner@heisoo.com')">複製</button>
+                    <h4>👑 管理員帳號</h4>
+                    <p><strong>Email:</strong> owner@heisoo.com</p>
+                    <p><strong>密碼:</strong> test!123</p>
+                    <p><strong>權限:</strong> 完整管理權限</p>
+                </div>
+                <div class="test-account">
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('test@heisoo.com')">複製</button>
+                    <h4>👤 一般用戶</h4>
+                    <p><strong>Email:</strong> test@heisoo.com</p>
+                    <p><strong>驗證:</strong> OTP 郵件驗證</p>
+                    <p><strong>權限:</strong> 基本用戶權限</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/app.js"></script>
+</body>
+</html>

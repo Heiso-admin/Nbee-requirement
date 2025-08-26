@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系統初始化 - NBEE</title>
+    <link rel="stylesheet" href="styles/globals.css">
+    <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-logo">NBEE</h1>
+                <p class="auth-title">建立第一個管理員帳號</p>
+            </div>
+            
+            <div class="important-notice">
+                <p class="notice-text">
+                    這將是系統中的第一個帳號，將自動獲得 <strong>擁有者 (Owner)</strong> 權限。
+                </p>
+            </div>
+            
+            <form id="init-form" class="auth-form">
+                <div class="form-group">
+                    <label for="init-name" class="form-label">姓名</label>
+                    <input type="text" id="init-name" class="form-input" placeholder="請輸入您的姓名" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="init-email" class="form-label">Email 地址</label>
+                    <input type="email" id="init-email" class="form-input" placeholder="admin@company.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="init-password" class="form-label">密碼</label>
+                    <input type="password" id="init-password" class="form-input" placeholder="請設定您的密碼" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">建立擁有者帳號</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="scripts/app.js"></script>
+    
+    <!-- 右下角問號 logo -->
+    <div class="help-logo">
+        <span class="help-icon">?</span>
+    </div>
+</body>
+</html>
