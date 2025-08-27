@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用戶初始設定 - NBEE</title>
+    <link rel="stylesheet" href="styles/globals.css">
+    <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-logo">NBEE</h1>
+                <p class="auth-title">完成您的帳號設定</p>
+                <p class="auth-subtitle">歡迎加入團隊！請設定您的個人資料</p>
+            </div>
+            
+            <div class="welcome-notice">
+                <p class="notice-text">
+                    您已被邀請加入團隊，請完成以下設定以開始使用系統。
+                </p>
+            </div>
+            
+            <form id="init-user-form" class="auth-form">
+                <div class="form-group">
+                    <label for="user-name" class="form-label">姓名 *</label>
+                    <input type="text" id="user-name" class="form-input" placeholder="請輸入您的姓名" required>
+                    <small class="form-hint">這將顯示在您的個人資料中</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-email" class="form-label">Email 地址</label>
+                    <input type="email" id="user-email" class="form-input" placeholder="your@email.com" readonly>
+                    <small class="form-hint">此 Email 地址由管理員設定，無法修改</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-password" class="form-label">設定密碼 *</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="user-password" class="form-input" placeholder="請設定您的登入密碼" required>
+                        <button type="button" id="user-password-toggle" class="password-toggle">👁️</button>
+                    </div>
+                    <small class="form-hint">密碼至少需要 8 個字符，建議包含大小寫字母、數字和特殊符號</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="terms-agree" required>
+                        <span class="checkmark"></span>
+                        我已閱讀並同意 <a href="#" class="link">服務條款</a> 和 <a href="#" class="link">隱私政策</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">完成設定並登入</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p class="footer-text">設定完成後，您將自動登入系統</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/app.js"></script>
+    <script>
+    // 頁面載入時自動填入 email
+    document.addEventListener('DOMContentLoaded', function() {
+        // 從 URL 參數中獲取 email
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        const token = urlParams.get('token');
+        
+        if (email) {
+            // 自動填入 email 欄位
+            const emailInput = document.getElementById('user-email');
+            if (emailInput) {
+                emailInput.value = email;
+            }
+            
+            // 可選：驗證邀請 token 的有效性
+            if (token) {
+                console.log('邀請 token:', token);
+                // 這裡可以添加 token 驗證邏輯
+            }
+        }
+    });
+    </script>
+    
+    <!-- 右下角問號 logo -->
+    <div class="help-logo" id="help-logo">
+        <span class="help-icon">?</span>
+    </div>
+    
+    <!-- 額外的樣式 -->
+    <style>
+        .welcome-notice {
+            background: #000000;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .welcome-notice .notice-text {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            font-weight: bold;
+        }
+        
+        .password-input-wrapper {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .password-toggle:hover {
+            color: #333;
+        }
+        
+        .form-hint {
+            display: block;
+            margin-top: 0.25rem;
+            font-size: 0.75rem;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            margin: 0;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .link {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        
+        .link:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-text {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #666;
+            margin: 1rem 0 0 0;
+        }
+        
+        #user-email {
+            background-color: #f8f9fa;
+            color: #666;
+        }
+    </style>
+</body>
+</html>

@@ -113,9 +113,16 @@ class TeamManagementApp {
         const regForm = document.getElementById('register-form');
         if (regForm) regForm.addEventListener('submit', (e) => this.handleRegister(e));
         
+        // 用戶初始設定表單事件
+        const initUserForm = document.getElementById('init-user-form');
+        if (initUserForm) initUserForm.addEventListener('submit', (e) => this.handleInitUser(e));
+        
         // 密碼顯示切換
-        const regPwdToggle = document.getElementById('reg-password-toggle');
-        if (regPwdToggle) regPwdToggle.addEventListener('click', () => this.togglePasswordVisibility('reg-password'));
+        const userPasswordToggle = document.getElementById('user-password-toggle');
+        if (userPasswordToggle) userPasswordToggle.addEventListener('click', () => this.togglePasswordVisibility('user-password'));
+        
+        const userPasswordConfirmToggle = document.getElementById('user-password-confirm-toggle');
+        if (userPasswordConfirmToggle) userPasswordConfirmToggle.addEventListener('click', () => this.togglePasswordVisibility('user-password-confirm'));
         
         // 導航事件（安全：若沒有也不會報錯）
         document.querySelectorAll('.nav-item').forEach(item => {
@@ -621,46 +628,49 @@ class TeamManagementApp {
     
     // 生成邀請鏈接
     generateInviteLink() {
-        const role = document.querySelector('input[name="link-role"]:checked').value;
-        const expiryDays = document.getElementById('link-expiry').value;
-        
-        // 生成唯一的邀請鏈接
-        const linkId = this.generateUniqueId();
-        const baseUrl = window.location.origin + window.location.pathname.replace('team.html', '');
-        const inviteUrl = `${baseUrl}register.html?invite=${linkId}&role=${role}`;
-        
-        // 計算過期時間
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + parseInt(expiryDays));
-        
-        // 儲存邀請鏈接資訊
-        this.inviteLinks.set(linkId, {
-            id: linkId,
-            role: role,
-            createdAt: new Date(),
-            expiryDate: expiryDate,
-            used: false
-        });
-        
-        // 顯示生成的鏈接
-        document.getElementById('generated-link').value = inviteUrl;
-        document.getElementById('link-result').classList.remove('hidden');
-        document.getElementById('copy-link-btn').disabled = false;
-        
-        // 顯示鏈接資訊
-        document.getElementById('link-info').innerHTML = `
-            <div class="text-sm text-gray-600 mt-2">
-                <p><i data-lucide="calendar" class="w-4 h-4 inline mr-1"></i>過期時間：${expiryDate.toLocaleDateString()}</p>
-                <p><i data-lucide="user-check" class="w-4 h-4 inline mr-1"></i>邀請角色：${this.getRoleDisplayName(role)}</p>
-            </div>
-        `;
-        
-        // 重新渲染圖標
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+        const email = document.getElementById('invite-email').value;
+        if (!email) {
+            this.showError('請輸入 Email 地址');
+            return;
         }
         
+        if (!this.isValidEmail(email)) {
+            this.showError('請輸入有效的 Email 地址');
+            return;
+        }
+        
+        // 生成邀請 token（實際應用中應該是後端生成）
+        const token = this.generateToken();
+        
+        // 構建邀請鏈接，包含 email 和 token 參數
+        const baseUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
+        const inviteLink = `${baseUrl}init-user.html?email=${encodeURIComponent(email)}&token=${token}`;
+        
+        // 顯示生成的鏈接
+        document.getElementById('generated-link').value = inviteLink;
+        document.getElementById('link-result').style.display = 'block';
+        
+        // 儲存邀請記錄（可選）
+        this.saveInviteRecord(email, token);
+        
         this.showSuccess('邀請鏈接已生成！');
+    }
+    
+    generateToken() {
+        // 簡單的 token 生成（實際應用中應該更安全）
+        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+    
+    saveInviteRecord(email, token) {
+        // 儲存邀請記錄到 localStorage（實際應用中應該儲存到後端）
+        const invites = JSON.parse(localStorage.getItem('pendingInvites') || '[]');
+        invites.push({
+            email: email,
+            token: token,
+            createdAt: new Date().toISOString(),
+            status: 'pending'
+        });
+        localStorage.setItem('pendingInvites', JSON.stringify(invites));
     }
     
     // 複製邀請鏈接
@@ -871,3 +881,118 @@ document.addEventListener('DOMContentLoaded', function() {
 //     }
 // }
 // 然後刪除第855-870行的重複定義
+
+    // 處理用戶初始設定表單
+    handleInitUser(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('user-name').value.trim();
+        const email = document.getElementById('user-email').value.trim();
+        const password = document.getElementById('user-password').value;
+        const termsAgree = document.getElementById('terms-agree').checked;
+        
+        // 驗證必填欄位
+        if (!name) {
+            this.showError('請輸入姓名');
+            return;
+        }
+        
+        if (!email) {
+            this.showError('Email 地址不能為空');
+            return;
+        }
+        
+        if (!password) {
+            this.showError('請設定密碼');
+            return;
+        }
+        
+        // 驗證密碼強度
+        if (password.length < 8) {
+            this.showError('密碼至少需要 8 個字符');
+            return;
+        }
+        
+        if (!termsAgree) {
+            this.showError('請同意服務條款和隱私政策');
+            return;
+        }
+        
+        // 驗證邀請 token（可選）
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        if (token && !this.validateInviteToken(email, token)) {
+            this.showError('邀請鏈接無效或已過期');
+            return;
+        }
+        
+        // 模擬用戶設定過程
+        this.showLoadingState('正在完成設定...');
+        
+        setTimeout(() => {
+            // 更新用戶資料
+            this.currentUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                role: 'member',
+                status: 'active',
+                loginMethod: 'password',
+                createdAt: new Date().toISOString()
+            };
+            
+            // 儲存密碼
+            this.userPasswords[email] = password;
+            this.userLoginMethods[email] = 'password';
+            
+            // 更新成員列表
+            this.members.push(this.currentUser);
+            
+            // 標記邀請為已使用
+            if (token) {
+                this.markInviteAsUsed(email, token);
+            }
+            
+            // 儲存到 localStorage
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+            localStorage.setItem('userPasswords', JSON.stringify(this.userPasswords));
+            localStorage.setItem('userLoginMethods', JSON.stringify(this.userLoginMethods));
+            localStorage.setItem('members', JSON.stringify(this.members));
+            
+            this.hideLoadingState();
+            this.showSuccess('帳號設定完成！正在跳轉...');
+            
+            // 跳轉到團隊頁面
+            setTimeout(() => {
+                window.location.href = 'team.html';
+            }, 1500);
+        }, 2000);
+    }
+}
+validateInviteToken(email, token) {
+    const invites = JSON.parse(localStorage.getItem('pendingInvites') || '[]');
+    const invite = invites.find(inv => inv.email === email && inv.token === token && inv.status === 'pending');
+    
+    if (!invite) {
+        return false;
+    }
+    
+    // 檢查邀請是否過期（例如：7天有效期）
+    const createdAt = new Date(invite.createdAt);
+    const now = new Date();
+    const daysDiff = (now - createdAt) / (1000 * 60 * 60 * 24);
+    
+    return daysDiff <= 7;
+}
+
+markInviteAsUsed(email, token) {
+    const invites = JSON.parse(localStorage.getItem('pendingInvites') || '[]');
+    const inviteIndex = invites.findIndex(inv => inv.email === email && inv.token === token);
+    
+    if (inviteIndex !== -1) {
+        invites[inviteIndex].status = 'used';
+        invites[inviteIndex].usedAt = new Date().toISOString();
+        localStorage.setItem('pendingInvites', JSON.stringify(invites));
+    }
+}
