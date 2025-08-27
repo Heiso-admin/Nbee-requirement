@@ -1505,6 +1505,15 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">登入方式</label>
+                    <select class="form-select" id="loginMethodSelect">
+                        <option value="password">密碼登入</option>
+                        <option value="otp">OTP 驗證碼登入</option>
+                        <option value="two-factor">雙因子認證登入</option>
+                    </select>
+                    <small class="form-help">選擇新成員的登入驗證方式</small>
+                </div>
+                <div class="form-group">
                     <label class="form-label">Message (Optional)</label>
                     <textarea class="form-input message-textarea" rows="1" placeholder="Add a personal message to your invitation"></textarea>
                 </div>
@@ -1631,6 +1640,18 @@
                 <!-- 登入記錄表格 -->
                 <div class="login-history-section">
                     <h4 class="section-title">最近登入記錄</h4>
+                    
+                    <!-- 添加者信息 -->
+                    <div class="account-creator-info" style="margin-bottom: 16px; padding: 12px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
+                        <div style="display: flex; align-items: center; gap: 8px; color: #495057; font-size: 14px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span><strong>添加者：</strong><span id="account-creator-name">josh@heisoo.com</span></span>
+                        </div>
+                    </div>
+                    
                     <table class="data-table">
                         <thead>
                             <tr>
