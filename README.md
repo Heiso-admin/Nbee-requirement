@@ -29,7 +29,6 @@
   - `ai-principles.md` - AI 相關原則
 
 - **team-role-authentication 資料夾**：
-  - `api.md` - API 規格文件
   - `prototype-tasks.md` - 原型開發任務清單
   - `requirements.md` - 需求規格文件
 
